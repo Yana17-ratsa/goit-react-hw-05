@@ -1,31 +1,65 @@
-import { useState } from "react";
-import { Formik, Form, Field } from "formik";
-import toast from "react-hot-toast";
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { getMovieBySearch } from '../../../movies-api';
+import SearchMovies from '../../components/SearchMovies/SearchMovies';
+import MovieList from '../../components/MovieList/MovieList';
 
 export default function MoviesPage() {
-    const [searchQuery, setSearhQuery] = useState("");
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [error, setError] = useState(false);
+  const movieSearch = searchParams.get('movieSearch') ?? '';
 
-    const handleSearch = async (topic) => {
-        setSearhQuery(topic);
+  // const newMovieSearch = newSearch => {
+  //   searchParams.set('movieSearch', newSearch);
+  //   setSearchParams(searchParams);
+  // };
+
+  useEffect(() => {
+    if (!movieSearch) return;
+    setMovies([]);
+    setError(false);
+    const searchMovie = async movieSearch => {
+      try {
+        const data = await getMovieBySearch(movieSearch);
+        if (!data.results.length) {
+          setError(true);
+          return;
+        }
+        setMovies(data.results);
+      } catch (error) {
+        setError(true);
+        console.log(error);
+      } finally {
+        setLoading(false);
+        setError(false);
+      }
+    };
+
+    searchMovie(movieSearch);
+  }, [movieSearch]);
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    const searchForm = event.currentTarget;
+    const newMovieSearch = searchForm.elements.movieName.value.trim();
+
+    if (!newMovieSearch) {
+      setError(true);
+      return;
     }
 
-    return (
-        <Formik
-        initialValues={{ query: "" }}
-          onSubmit={(values, actions) => {
-            if (values.query.trim() !== '') {
-                handleSearch(values.query);
-            actions.resetForm();
-            } else {
-             toast.error("The search field is empty. Please try again!");
-            }
-            return
-        }}
-      >
-        <Form>
-          <Field type="text" name="query" placeholder="Search movies here" />
-          <button type="submit">Search</button>
-        </Form>
-      </Formik>
-    );
-  }
+    setSearchParams({ movieSearch: newMovieSearch });
+    searchForm.reset();
+  };
+
+  return (
+    <div>
+      <SearchMovies onSubmit={handleSubmit} />
+      {loading && <p>Loading... please wait!</p>}
+      {error && <p>Error... reload page and try again! </p>}
+      {movies.length > 0 && <MovieList movies={movies} />}
+    </div>
+  );
+}

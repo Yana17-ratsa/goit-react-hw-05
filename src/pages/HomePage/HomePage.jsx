@@ -11,7 +11,7 @@ export default function HomePage() {
     useEffect(() => {
         setLoading(true);
         getTrendingMovies()
-        .then(data => setTrendingMovies(data)
+        .then(data => setTrendingMovies(data.results)
         )
         .finally(() => setLoading(false));
     }, [])
@@ -21,7 +21,7 @@ export default function HomePage() {
         <div>
             <h2>Trending today</h2>
             {loading && <p>Loading... Please wait!</p>}
-            <MovieList movies={trendingMovies}/>
+            {trendingMovies.length > 0 && <MovieList movies={trendingMovies}/> }
         </div>
     )
 }
