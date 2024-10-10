@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 export default function MovieItem({ movie }) {
   const location = useLocation();
 
-  const { id, poster_path, title } = movie;
+  const { id, poster_path, title, overview } = movie;
 
   const defaultImg =
     'https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg';
@@ -20,7 +20,12 @@ export default function MovieItem({ movie }) {
           alt={title}
         />
       </Link>
-      <p>{title}</p>
+      <p>
+        <b>Title:</b> {title}
+      </p>
+      <p>
+        <b>Overview:</b> {overview}
+      </p>
     </div>
   );
 }
