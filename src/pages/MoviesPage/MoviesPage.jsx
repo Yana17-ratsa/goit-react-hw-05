@@ -12,7 +12,7 @@ export default function MoviesPage() {
   useEffect(() => {
     async function fetchData() {
       const data = await getMovieBySearch(movieName);
-      setMovies(data);
+      setMovies(data.results);
     }
     fetchData();
   }, [movieName]);
