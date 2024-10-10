@@ -1,45 +1,53 @@
-import { Suspense, useEffect, useRef, useState } from 'react';
-import {
-  Link,
-  NavLink,
-  Outlet,
-  useLocation,
-  useParams,
-} from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { getMovieDetails } from '../../../movies-api';
-import MovieItem from '../../components/MovieItem/MovieItem';
+
+import MovieInfo from '../../components/App/MovieCard/MovieInfo';
 
 export default function MovieDetailsPage() {
   const { movieId } = useParams();
   const location = useLocation();
   const backLinkRef = useRef(location.state ?? '/movies');
 
-  const [movie, setMovie] = useState(null);
+  const [movie, setMovie] = useState({});
+  // const [reviews, setReviews] = useState({});
 
   useEffect(() => {
     async function fetchData() {
       const data = await getMovieDetails(movieId);
-      setMovie(data.results);
+      setMovie(data);
+      // console.log(data);
     }
     fetchData();
   }, [movieId]);
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const data = await getMovieReviews(movieId);
+  //     setReviews(data);
+  //     console.log(data);
+  //   }
+  //   fetchData();
+  // }, [movieId]);
 
   return (
     <div>
       <h1>Movie Details</h1>
       <Link to={backLinkRef.current}>Back to search</Link>
-      {movie && <MovieItem movie={movie} />}
-      <ul>
+      <MovieInfo movie={movie} />
+      {/* <ul>
         <li>
           <NavLink to="cast">Cast</NavLink>
         </li>
         <li>
-          <NavLink to="reviews">Reviews</NavLink>
+          <NavLink to="reviews" reviews={reviews}>
+            Reviews
+          </NavLink>
         </li>
-      </ul>
-      <Suspense fallback={<div>LOADING SUBPAGE!!!</div>}>
+      </ul> */}
+      {/* <Suspense fallback={<div>LOADING SUBPAGE!!!</div>}>
         <Outlet />
-      </Suspense>
+      </Suspense> */}
     </div>
   );
 }
