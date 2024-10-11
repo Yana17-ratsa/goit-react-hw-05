@@ -4,19 +4,19 @@ import { useParams } from 'react-router-dom';
 
 export default function MovieReviews() {
   const { movieId } = useParams();
-  const [reviews, setReviews] = useState({});
+  const [reviews, setReviews] = useState();
   useEffect(() => {
     async function fetchData() {
-      const response = await getMovieReviews(movieId);
-      setReviews(response.data.results);
-      console.log(response.data.results);
+      const data = await getMovieReviews(movieId);
+      setReviews(data.results);
+      console.log(data.results);
     }
     fetchData();
   }, [movieId]);
 
   return (
     <>
-      {reviews.length === 0 && <p>We donot any reviews for this movie</p>}
+      {/* {reviews.length === 0 && <p>We do not have any reviews for this movie</p>} */}
       <ul>
         {reviews.map(({ id, author, content }) => {
           return (
