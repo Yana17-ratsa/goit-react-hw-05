@@ -29,9 +29,7 @@ export default function MovieDetailsPage() {
           <NavLink to="cast">Cast</NavLink>
         </li>
         <li>
-          <NavLink to="reviews" movie={movie.id}>
-            Reviews
-          </NavLink>
+          <NavLink to="reviews">Reviews</NavLink>
         </li>
       </ul>
     </div>

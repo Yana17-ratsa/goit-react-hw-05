@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
 import { getMovieReviews } from '../../../movies-api';
+import { useParams } from 'react-router-dom';
 
-export default function MovieReviews({ movie }) {
+export default function MovieReviews() {
+  const { movieId } = useParams();
   const [reviews, setReviews] = useState({});
   useEffect(() => {
     async function fetchData() {
-      const data = await getMovieReviews(movie);
-      setReviews(data.results);
-      console.log(data.results);
+      const response = await getMovieReviews(movieId);
+      setReviews(response.data.results);
+      console.log(response.data.results);
     }
     fetchData();
-  }, [movie]);
+  }, [movieId]);
 
   return (
     <>
