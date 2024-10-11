@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getMovieReviews } from '../../../../movies-api';
+import { getMovieReviews } from '../../../movies-api';
 
 export default function MovieReviews(movie) {
   const [reviews, setReviews] = useState({});
